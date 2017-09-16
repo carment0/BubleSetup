@@ -10,13 +10,52 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 
+import RaisedButton from 'material-ui/RaisedButton';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+
 import ReduxStore from './store';
 
-const Application = () => (
-  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-    <AppBar title="Buble" />
-  </MuiThemeProvider>
-);
+
+class Application extends React.Component {
+  state = {
+    open: false,
+    anchorElement: undefined
+  };
+
+  handleMenuOpen = (e) => {
+    e.preventDefault();
+    this.setState({ open: true, anchorElement: e.currentTarget });
+  }
+
+  handleMenuClose = () => {
+    this.setState({ open: false });
+  }
+
+  render() {
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+        <div>
+          <AppBar title="Buble" />
+          <RaisedButton onClick={this.handleMenuOpen} label="Click me" />
+          <Popover
+            open={this.state.open}
+            anchorEl={this.state.achorElement}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            onRequestClose={this.handleMenuClose}>
+            <Menu>
+              <MenuItem primaryText="Project 1" />
+              <MenuItem primaryText="Project 2" />
+              <MenuItem primaryText="Project 3" />
+            </Menu>
+          </Popover>
+        </div>
+      </MuiThemeProvider>
+    );
+  }
+}
 
 const Router = ({ store }) => (
   <Provider store={store}>
